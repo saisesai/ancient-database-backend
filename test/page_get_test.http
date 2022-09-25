@@ -1,0 +1,15 @@
+### 测试获取页面接口全部页面
+POST http://localhost:3001/api/page/get
+Content-Type: application/json
+
+{
+  "condition": []
+}
+
+### 测试获取页面接口
+POST http://localhost:3001/api/page/get
+Content-Type: application/json
+
+{
+  "condition": ["id != ?", 0]
+}

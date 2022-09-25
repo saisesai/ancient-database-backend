@@ -1,0 +1,15 @@
+### 测试获取全部字符
+POST http://localhost:3001/api/char/get
+Content-Type: application/json
+
+{
+  "condition": []
+}
+
+### 测试条件
+POST http://localhost:3001/api/char/get
+Content-Type: application/json
+
+{
+  "condition": ["region.pos_x = ?", 0]
+}

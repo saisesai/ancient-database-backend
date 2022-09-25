@@ -1,0 +1,14 @@
+### 测试修改字符
+POST http://localhost:3001/api/char/mod
+Content-Type: application/json
+
+{
+  "id": 2,
+  "value": "546",
+  "region": {
+    "pos_x": 20,
+    "pos_y": 20,
+    "width": 200,
+    "height": 200
+  }
+}

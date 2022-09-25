@@ -1,0 +1,7 @@
+### 测试删除
+POST http://localhost:3001/api/char/del
+Content-Type: application/json
+
+{
+  "id": 4
+}

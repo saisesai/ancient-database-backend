@@ -1,0 +1,7 @@
+### 测试添加页面接口
+POST http://localhost:3001/api/page/add
+Content-Type: application/json
+
+{
+  "artwork_id": 6
+}

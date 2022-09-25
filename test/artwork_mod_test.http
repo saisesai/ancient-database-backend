@@ -1,0 +1,9 @@
+### 作品修改接口测试
+POST http://localhost:3001/api/artwork/mod
+Content-Type: application/json
+
+{
+  "id": 3,
+  "cover": "https://www.baidu.com/logo.jpg",
+  "ti_ming": "baidu"
+}

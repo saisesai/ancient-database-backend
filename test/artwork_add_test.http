@@ -1,0 +1,5 @@
+### 测试新增作品
+POST http://localhost:3001/api/artwork/add
+Content-Type: application/json
+
+{}

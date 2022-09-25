@@ -1,0 +1,7 @@
+### 测试删除作品
+POST  http://localhost:3001/api/artwork/del
+Content-Type: application/json
+
+{
+  "id": 2
+}

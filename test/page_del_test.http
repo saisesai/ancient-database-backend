@@ -1,0 +1,7 @@
+### 测试页面删除接口
+POST http://localhost:3001/api/page/del
+Content-Type: application/json
+
+{
+  "id": 1
+}

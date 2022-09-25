@@ -1,0 +1,17 @@
+### 测试空Value
+POST http://localhost:3001/api/char/add
+Content-Type: application/json
+
+{
+  "page_id": 0,
+  "value": ""
+}
+
+### 正常
+POST http://localhost:3001/api/char/add
+Content-Type: application/json
+
+{
+  "page_id": 1,
+  "value": "123"
+}

@@ -1,0 +1,15 @@
+### 测试全部作品获取
+POST http://localhost:3001/api/artwork/get
+Content-Type: application/json
+
+{
+  "condition": []
+}
+
+### 测试作品条件获取
+POST http://localhost:3001/api/artwork/get
+Content-Type: application/json
+
+{
+  "condition": ["cover != ?", ""]
+}
