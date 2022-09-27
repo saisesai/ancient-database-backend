@@ -9,7 +9,8 @@ import (
 type Page struct {
 	gorm.Model           // GORM基础模型
 	ArtworkId  uint      `json:"artwork_id"` // 所属作品ID
-	Chars      UintSlice `json:"chars"` // 字符ID
+	ImageUrl   string    `json:"image_url"`  // 页面图片URL
+	Chars      UintSlice `json:"chars"`      // 字符ID
 }
 
 // NewPage 新建页面

@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/mohae/deepcopy"
 	"github.com/saisesai/ancient-database-backend/model"
 	"net/http"
 	"time"
@@ -12,6 +14,7 @@ type PageOutput struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	ArtworkId uint      `json:"artwork_id"`
+	ImageUrl  string    `json:"image_url"`
 	Chars     []uint    `json:"chars"`
 }
 
@@ -49,7 +52,7 @@ func PageAddHandler(ctx *gin.Context) {
 	output.Data.ID = pageNew.ID
 	output.Data.CreatedAt = pageNew.CreatedAt
 	output.Data.UpdatedAt = pageNew.UpdatedAt
-	output.Data.ArtworkId = pageNew.ArtworkId
+	output.Data.ImageUrl = pageNew.ImageUrl
 	output.Data.ArtworkId = pageNew.ArtworkId
 	output.Data.Chars = pageNew.Chars
 
@@ -138,6 +141,7 @@ func PageGetHandler(ctx *gin.Context) {
 		out.CreatedAt = v.CreatedAt
 		out.UpdatedAt = v.UpdatedAt
 		out.ArtworkId = v.ArtworkId
+		out.ImageUrl = v.ImageUrl
 		out.Chars = v.Chars
 		output.Data = append(output.Data, out)
 	}
@@ -148,13 +152,75 @@ func PageGetHandler(ctx *gin.Context) {
 }
 
 type PageModifyInput struct {
-	ID uint `json:"id" binding:"required"`
+	ID       uint   `json:"id" binding:"required"`
+	ImageUrl string `json:"image_url"`
 }
 
 type PageModifyOutput struct {
-	Msg string `json:"msg"`
+	Msg  string     `json:"msg"`
+	Data PageOutput `json:"data"`
 }
 
 func PageModifyHandler(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, &PageModifyOutput{Msg: "接口未实现"})
+	var err error
+	input := PageModifyInput{}
+	output := PageModifyOutput{}
+
+	// 绑定参数
+	err = ctx.BindJSON(&input)
+	if err != nil {
+		output.Msg = err.Error()
+		ctx.JSON(http.StatusBadRequest, &output)
+		return
+	}
+
+	// 查找
+	qr, err := model.FindPages(input.ID)
+	if err != nil {
+		output.Msg = err.Error()
+		ctx.JSON(http.StatusBadRequest, &output)
+		return
+	}
+	q := qr[0]
+
+	// 备份数据
+	qc := deepcopy.Copy(q).(model.Page)
+
+	// 更新数据
+	inputBytes, err := json.Marshal(input)
+	if err != nil {
+		output.Msg = err.Error()
+		ctx.JSON(http.StatusInternalServerError, &output)
+		return
+	}
+	err = json.Unmarshal(inputBytes, &q)
+	q.ID = qc.ID
+	q.CreatedAt = qc.CreatedAt
+	q.UpdatedAt = qc.UpdatedAt
+	q.DeletedAt = qc.DeletedAt
+	q.Chars = qc.Chars
+	err = q.Save()
+	if err != nil {
+		output.Msg = err.Error()
+		ctx.JSON(http.StatusInternalServerError, &output)
+		return
+	}
+
+	// 整理输出数据
+	qBytes, err := json.Marshal(&q)
+	if err != nil {
+		output.Msg = err.Error()
+		ctx.JSON(http.StatusInternalServerError, &output)
+		return
+	}
+	err = json.Unmarshal(qBytes, &output.Data)
+	if err != nil {
+		output.Msg = err.Error()
+		ctx.JSON(http.StatusInternalServerError, &output)
+		return
+	}
+
+	// 输出结果
+	output.Msg = "ok"
+	ctx.JSON(http.StatusOK, &output)
 }
