@@ -6,7 +6,7 @@
 - config: 服务设置相关代码
 - controller: 服务控制器代码
 - middleware: 服务中间件代码
-    - gin-static 静态文件中间件代码
+    - static 静态文件中间件代码
 - model: 模型代码代码
 - public: 前端及静态文件
 - test: 接口测试文件

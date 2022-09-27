@@ -5,12 +5,24 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/saisesai/ancient-database-backend/config"
 	"github.com/saisesai/ancient-database-backend/controller"
+	"github.com/saisesai/ancient-database-backend/middleware/static"
 )
 
 func main() {
 	fmt.Println("http listen at:", config.C.HttpListenAddress)
 
-	app := gin.Default()
+	app := gin.New()
+	err := app.SetTrustedProxies([]string{"127.0.0.1"})
+	if err != nil {
+		panic(err)
+	}
+
+	app.Use(gin.Logger(), gin.Recovery())
+
+	app.Use(static.ServeRoot("/", "public"))
+	app.NoRoute(func(ctx *gin.Context) { // for vue-router
+		ctx.File("public/index.html")
+	})
 
 	app.POST("/api/char/add", controller.CharAddHandler)
 	app.POST("/api/char/del", controller.CharDeleteHandler)
